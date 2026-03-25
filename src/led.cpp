@@ -10,16 +10,16 @@
 
 #include "led.hpp"
 
-Led::Led(GPIO_TypeDef* port, uint16_t pin) {
+Led::Led(GPIO_TypeDef* port, uint16_t pin) : port(port), pin(pin) {
     this->off();
 }
 
 void Led::on(void) {
-    HAL_GPIO_WritePin(this->port, this->pin);
+    HAL_GPIO_WritePin(this->port, this->pin, GPIO_PIN_RESET);
 }
 
 void Led::off(void) {
-    HAL_GPIO_WritePin(this->port, this->pin);
+    HAL_GPIO_WritePin(this->port, this->pin, GPIO_PIN_SET);
 }
 
 void Led::toggle(void) {

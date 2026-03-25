@@ -11,9 +11,9 @@
 #include "locomotion.hpp"
 #include "motor.hpp"
 
-Locomotion::Locomotion(Motor& motor_left, Motor& motor_right) {
-    this->motor_left = motor_left;
-    this->motor_right = motor_right;
+Locomotion::Locomotion(Motor& motor_left, Motor& motor_right) : motor_left(motor_left), motor_right(motor_right) {
+    //this->motor_left = motor_left;
+    //this->motor_right = motor_right;
 }
 
 void Locomotion::set_speed(int8_t left_speed, int8_t right_speed) {
