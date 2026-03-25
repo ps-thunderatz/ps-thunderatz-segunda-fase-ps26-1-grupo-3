@@ -16,14 +16,38 @@
 Motor::Motor(
     void (*tim_init)(), TIM_HandleTypeDef* forward_tim_handle, uint8_t forward_tim_ch,
     TIM_HandleTypeDef* backward_tim_handle, uint8_t backward_tim_ch, int8_t min_speed, int8_t max_speed
-) {
-    // Implemente aqui o criador da classe Motor.
+){
+tim_init(forward_tim_handle, forward_tim_ch);
+tim_init(backward_tim_handle, backward_tim_ch);
+
+this->forward_tim_handle = forward_tim_handle;
+this->forward_tim_ch = forward_tim_ch;
+this->backward_tim_handle = backward_tim_handle;
+this->backward_tim_ch = backward_tim_ch;
+this->min_speed = min_speed;
+this->max_speed = max_speed;
 }
 
 void Motor::set_speed(int8_t speed) {
-    // Implemente aqui a função para definir a velocidade do motor.
+speed = constrain(speed,this->max_speed,this->min_speed);
+if(speed==0){
+    __HAL_TIM_SET_COMPARE(_this->backward_tim_handle,this->backward_tim_ch, 700);
+    __HAL_TIM_SET_COMPARE(_this->forward_tim_handle,this->forward_tim_ch, 700);
+}
+
+else if(speed<0){
+    __HAL_TIM_SET_COMPARE(_this->backward_tim_handle,this->backward_tim_ch, util::map(-speed, this->min_speed, this->max_speed, 0,700));
+    __HAL_TIM_SET_COMPARE(_this->forward_tim_handle,this->forward_tim_ch, 0);
+}
+else{
+    __HAL_TIM_SET_COMPARE(_this->forward_tim_handle,this->forward_tim_ch, util::map(speed, this->min_speed, this->max_speed, 0,700));
+    __HAL_TIM_SET_COMPARE(_this->backward_tim_handle,this->backward_tim_ch, 0);
+
+}
+
 }
 
 void Motor::stop() {
-    // Implemente aqui a função para parar o motor.
+    __HAL_TIM_SET_COMPARE(_this->backward_tim_handle,this->backward_tim_ch, 0);
+    __HAL_TIM_SET_COMPARE(_this->forward_tim_handle,this->forward_tim_ch, 0);
 }
