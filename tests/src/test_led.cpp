@@ -19,6 +19,6 @@ int main() {
 
     for (;;) {
         led_test.toggle();
-        hal::mcu::sleep(2000);
+        hal::mcu::sleep(3000);
     }
 }
