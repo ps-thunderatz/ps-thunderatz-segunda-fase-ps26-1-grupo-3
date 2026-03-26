@@ -15,6 +15,9 @@
 int main() {
     // TODO: Adicionar a lógica de teste para o LED.
     hal::mcu::init();
+    Led led_test(GPIOA, GPIO_PIN_4);
 
-    for (;;) { }
+    for (;;) {
+        led_test.on();
+    }
 }

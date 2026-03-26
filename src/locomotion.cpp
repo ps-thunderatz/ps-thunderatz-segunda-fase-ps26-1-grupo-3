@@ -23,4 +23,5 @@ void Locomotion::set_speed(int8_t left_speed, int8_t right_speed) {
 
 void Locomotion::stop() {
 motor_left.stop();
+motor_right.stop();
 }
