@@ -12,6 +12,7 @@
 
 Led::Led(GPIO_TypeDef* port, uint16_t pin) : port(port), pin(pin) {
     this->off();
+    MX_GPIO_Init();
 }
 
 void Led::on(void) {
