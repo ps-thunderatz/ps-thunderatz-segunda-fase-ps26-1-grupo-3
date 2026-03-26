@@ -12,21 +12,66 @@
 #include "controller.hpp"
 
 Controller::Controller(Led led, Locomotion locomotion, Rc rc) : led(led), locomotion(locomotion), rc(rc) {
-    // TODO: Adicionar a lógica de construção do objeto
+    this->led = led;
+    this->locomotion = locomotion;
+    this->rc = rc;
+}
+
+void Controller::init(){
+    this->current_state = INIT;
 }
 
 void Controller::run() {
     switch (this->current_state) {
         case STRATEGY_CHOOSER: {
-            // TODO: Implementar a lógica de escolha de estratégia
+
+            //4 segundos para escolher a estrategia
+            this->led.on();
+            hal::mcu::sleep(1000);
+            this->led.toggle();
+            hal::mcu::sleep(1000);
+            this->led.toggle();
+            hal::mcu::sleep(1000);
+            this->led.toggle();
+            hal::mcu::sleep(1000);
+            this->led.toggle();
+
+
+            /*TABELA DO RC e qual estrategia*/
+            //CH1 <= 0 e CH2 <= 0 (os dois para tras) => LEVEL_0
+            //CH1 <= 0 e CH2 > 0 => LEVEL_1
+            //CH1 > 0 e CH2 <= 0 => LEVEL_2
+            //CH1 > 0 e CH2 > 0 (os dois para frente) => LEVEL_3
+            //OBS: Se o controle estiver solto (0, 0), ele ira para level_0
+
+
+            if(this->rc.get_speed_ch1() <= 0){
+                if(this->rc.get_speed_ch2()<=0) this->strategy_run = LEVEL_0;
+                else this->strategy_run = LEVEL_1;
+            }
+            else{
+                if(this->rc.get_speed_ch2()<0) this->strategy_run = LEVEL_2;
+                else this->strategy_run = LEVEL_3;
+            }
+            this->led.off();
+
+            this->current_state = RUN;
             break;
         }
         case RUN: {
-            // TODO: Implementar a lógica de execução da estratégia
+            this->strategy_run();
+
+            uint32_t start_time = HAL_GetTick();
+            while (HAL_GetTick() - start_time < 10000) { //tempo para poder controlar o robo
+                this->move_robot(RC_INPUT)
+            }
+            this->current_state = STRATEGY_CHOOSER;
+            while
+
             break;
         }
         default: {
-            // TODO: Implementar a lógica de estado padrão
+            this->current_state = STRATEGY_CHOOSER;
             break;
         }
     }
@@ -36,24 +81,31 @@ void Controller::move_robot(Direction direction) {
     switch (direction) {
         // TODO: Implementar a lógica de movimentação do robô
         case FORWARD: {
+            this->locomotion.set_speed(80, 80);
             break;
         }
         case BACKWARD: {
+            this->locomotion.set_speed(-80, -80);
             break;
         }
         case LEFT: {
+            this->locomotion.set_speed(35, 80);
             break;
         }
         case RIGHT: {
+            this->locomotion.set_speed(80, 35);
             break;
         }
         case STOPPED: {
+            this->locomotion.stop();
             break;
         }
         case RC_INPUT: {
+            this->locomotion.set_speed(this->rc.get_speed_ch1(),this->rc.get_speed_ch2());
             break;
         }
         default: {
+            this->locomotion.stop(); //em teoria, nunca deve estar aqui
             break;
         }
     }
@@ -76,7 +128,7 @@ void Controller::strategy_run() {
             this->led.off();
 
             this->turn = RC_INPUT;
-            this->current_state = RUN;
+            //this->current_state = RUN;
             break;
         }
 
@@ -97,7 +149,7 @@ void Controller::strategy_run() {
             this->led.off();
 
             this->turn = RC_INPUT;
-            this->current_state = RUN;
+            //this->current_state = RUN;
             break;
         }
 
@@ -137,7 +189,7 @@ void Controller::strategy_run() {
             this->led.off();
 
             this->turn = RC_INPUT;
-            this->current_state = RUN;
+            //this->current_state = RUN;
             break;
         }
 
