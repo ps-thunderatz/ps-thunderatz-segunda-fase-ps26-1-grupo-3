@@ -18,6 +18,7 @@ int main() {
     Led led_test(GPIOA, GPIO_PIN_4);
 
     for (;;) {
-        led_test.on();
+        led_test.toggle();
+        hal::mcu::sleep(2000);
     }
 }
