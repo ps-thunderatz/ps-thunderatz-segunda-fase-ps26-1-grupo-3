@@ -69,5 +69,11 @@ dkms.conf
 !.vscode/settings.json
 !.vscode/extensions.json
 
+### IntelliJIDEA ###
+.idea/*
+*.iml
+*.iws
+*.ipr
+/.github/copilot-instructions.md
 
 # End of https://www.gitignore.io/api/visualstudiocode,c
