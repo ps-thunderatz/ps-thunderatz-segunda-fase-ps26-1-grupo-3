@@ -21,7 +21,8 @@ tim_init();
 }
 
 void Motor::set_speed(int8_t speed) {
-speed = constrain(speed,this->max_speed,this->min_speed);
+speed = constrain(speed, this->min_speed, this->max_speed);
+
 if(speed<0){
     __HAL_TIM_SET_COMPARE(this->backward_tim_handle,this->backward_tim_ch, map<uint32_t>(-speed, this->min_speed, this->max_speed, 0,700));
     __HAL_TIM_SET_COMPARE(this->forward_tim_handle,this->forward_tim_ch, 0);
