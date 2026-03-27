@@ -114,9 +114,10 @@ void Controller::move_robot(Direction direction) {
 void Controller::strategy_run() {
     switch (this->current_level) {
         case LEVEL_0: {
-            // TODO: Implementar a lógica de execução da estratégia 0
+            this->locomotion.stop();
             break;
         }
+
         case LEVEL_1: {
             this->led.on();
 
@@ -130,6 +131,7 @@ void Controller::strategy_run() {
             //this->current_state = RUN;
             break;
         }
+
         case LEVEL_2: {
             uint32_t start_time = HAL_GetTick();
             uint32_t blink_time = HAL_GetTick();
@@ -150,6 +152,7 @@ void Controller::strategy_run() {
             //this->current_state = RUN;
             break;
         }
+
         case LEVEL_3: {
             const uint8_t  REPEATS = 3;
             const uint32_t FORWARD_MS = 400;
@@ -189,7 +192,9 @@ void Controller::strategy_run() {
             //this->current_state = RUN;
             break;
         }
+
         default: {
+            this->locomotion.stop();
             break;
         }
     }
