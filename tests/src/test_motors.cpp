@@ -14,27 +14,15 @@
 #include "led.hpp"
 
 int main() {
-    hal::mcu::init();
-    Motor motorTesteE(MOTORS_TIM_INIT, &MOTORS_TIM_HANDLER,
-                 LEFT_MOTOR_FORWARD_TIM_CH,  &MOTORS_TIM_HANDLER, LEFT_MOTOR_BACKWARD_TIM_CH);
-    Motor motorTesteD(MOTORS_TIM_INIT, &MOTORS_TIM_HANDLER,
-                 RIGHT_MOTOR_FORWARD_TIM_CH, &MOTORS_TIM_HANDLER, RIGHT_MOTOR_BACKWARD_TIM_CH);
-
+    Motor motortesteE(MOTORS_TIM_INIT, &MOTORS_TIM_HANDLER, LEFT_MOTOR_FORWARD_TIM_CH, &MOTORS_TIM_HANDLER, LEFT_MOTOR_BACKWARD_TIM_CH, 10, 50);
+    Motor motortesteD(MOTORS_TIM_INIT, &MOTORS_TIM_HANDLER, RIGHT_MOTOR_FORWARD_TIM_CH, &MOTORS_TIM_HANDLER, RIGHT_MOTOR_BACKWARD_TIM_CH, 10, 50);
     for (;;) {
-        motorTesteD.set_speed(100);
-        motorTesteE.set_speed(100);
+        motortesteD.set_speed(50);
+        motortesteE.set_speed(50);
         hal::mcu::sleep(2000);
-
-        motorTesteD.stop();
-        motorTesteE.stop();
-        hal::mcu::sleep(1000);
-
-        motorTesteD.set_speed(-100);
-        motorTesteE.set_speed(-100);
+        motortesteD.stop();
+        motortesteE.stop();
         hal::mcu::sleep(2000);
-
-        motorTesteD.stop();
-        motorTesteE.stop();
-        hal::mcu::sleep(1000);
     }
+
 }
