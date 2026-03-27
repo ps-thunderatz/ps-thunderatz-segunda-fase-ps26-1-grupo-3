@@ -12,9 +12,7 @@
 #include "controller.hpp"
 
 Controller::Controller(Led led, Locomotion locomotion, Rc rc) : led(led), locomotion(locomotion), rc(rc) {
-    this->led = led;
-    this->locomotion = locomotion;
-    this->rc = rc;
+
 }
 
 void Controller::init(){
@@ -46,12 +44,12 @@ void Controller::run() {
 
 
             if(this->rc.get_speed_ch1() <= 0){
-                if(this->rc.get_speed_ch2()<=0) this->strategy_run = LEVEL_0;
-                else this->strategy_run = LEVEL_1;
+                if(this->rc.get_speed_ch2()<=0) this->current_level = LEVEL_0;
+                else this->current_level = LEVEL_1;
             }
             else{
-                if(this->rc.get_speed_ch2()<0) this->strategy_run = LEVEL_2;
-                else this->strategy_run = LEVEL_3;
+                if(this->rc.get_speed_ch2()<0) this->current_level = LEVEL_2;
+                else this->current_level = LEVEL_3;
             }
             this->led.off();
 
@@ -63,11 +61,9 @@ void Controller::run() {
 
             uint32_t start_time = HAL_GetTick();
             while (HAL_GetTick() - start_time < 10000) { //tempo para poder controlar o robo
-                this->move_robot(RC_INPUT)
+                this->move_robot(RC_INPUT);
             }
             this->current_state = STRATEGY_CHOOSER;
-            while
-
             break;
         }
         default: {
