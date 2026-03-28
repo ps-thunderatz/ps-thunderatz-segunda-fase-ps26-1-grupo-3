@@ -23,7 +23,9 @@ public:
     /**
      * @brief Construct a new Controller object.
      */
-    Controller(Led led, Locomotion locomotion, Rc rc);
+//    Controller(Led led, Locomotion locomotion, Rc rc);
+    Controller(Led& led, Locomotion& locomotion, Rc& rc);
+
 
     /**
      * @brief Initialize controller.
@@ -82,9 +84,13 @@ private:
      */
     void strategy_run();
 
-    Led        led;
-    Locomotion locomotion;
-    Rc         rc;
+    Led*        led;
+    Locomotion* locomotion;
+    Rc*         rc;
+
+//    Led        led;
+//    Locomotion locomotion;
+//    Rc         rc;
 
     State     current_state = INIT;
     Direction turn = STOPPED;

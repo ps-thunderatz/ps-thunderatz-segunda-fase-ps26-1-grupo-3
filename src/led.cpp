@@ -10,18 +10,19 @@
 
 #include "led.hpp"
 
-Led::Led(GPIO_TypeDef* port, uint16_t pin) {
-    // Implemente aqui o criador da classe Led.
+Led::Led(GPIO_TypeDef* port, uint16_t pin) : port(port), pin(pin) {
+    this->off();
+    MX_GPIO_Init();
 }
 
 void Led::on(void) {
-    // Implemente aqui a função para ligar o led.
+    HAL_GPIO_WritePin(this->port, this->pin, GPIO_PIN_RESET);
 }
 
 void Led::off(void) {
-    // Implemente aqui a função para desligar o led.
+    HAL_GPIO_WritePin(this->port, this->pin, GPIO_PIN_SET);
 }
 
 void Led::toggle(void) {
-    // Implemente aqui a função para alternar o estado do led.
+    HAL_GPIO_TogglePin(this->port, this->pin);
 }
