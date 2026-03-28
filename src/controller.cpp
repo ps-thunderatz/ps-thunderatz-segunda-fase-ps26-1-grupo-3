@@ -25,13 +25,13 @@ void Controller::run() {
 
             //4 segundos para escolher a estrategia
             this->led.on();
-            hal::mcu::sleep(1000);
+            hal::mcu::sleep(1500);
             this->led.toggle();
-            hal::mcu::sleep(1000);
+            hal::mcu::sleep(1500);
             this->led.toggle();
-            hal::mcu::sleep(1000);
+            hal::mcu::sleep(1500);
             this->led.toggle();
-            hal::mcu::sleep(1000);
+            hal::mcu::sleep(1500);
             this->led.toggle();
 
 
@@ -43,13 +43,13 @@ void Controller::run() {
             //OBS: Se o controle estiver solto (0, 0), ele ira para level_0
 
 
-            if(this->rc.get_speed_ch1() <= 0){
-                if(this->rc.get_speed_ch2()<=0) this->current_level = LEVEL_0;
-                else this->current_level = LEVEL_1;
+            if(this->rc.get_speed_ch1() <= 10){
+                if(this->rc.get_speed_ch2()<=10) this->current_level = LEVEL_3;
+                else this->current_level = LEVEL_2;
             }
             else{
-                if(this->rc.get_speed_ch2()<0) this->current_level = LEVEL_2;
-                else this->current_level = LEVEL_3;
+                if(this->rc.get_speed_ch2()<10) this->current_level = LEVEL_1;
+                else this->current_level = LEVEL_0;
             }
             this->led.off();
 
@@ -58,11 +58,18 @@ void Controller::run() {
         }
         case RUN: {
             this->strategy_run();
-
+            this->led.on();
+            hal::mcu::sleep(3000);
             uint32_t start_time = HAL_GetTick();
             while (HAL_GetTick() - start_time < 10000) { //tempo para poder controlar o robo
-                this->move_robot(RC_INPUT);
+                //Devido a fatores desconhecidos acima de nossa capacidade as funções do rc não funcionam 
+                //dentro do controller
+                //Na teoria isto deveria funcionar:
+                this->locomotion.set_speed(this->rc.get_speed_ch1(),this->rc.get_speed_ch2());
             }
+
+
+            this->move_robot(STOPPED);
             this->current_state = STRATEGY_CHOOSER;
             break;
         }
@@ -123,7 +130,7 @@ void Controller::strategy_run() {
             this->locomotion.stop();
             this->led.off();
 
-            this->turn = RC_INPUT;
+            //this->turn = RC_INPUT;
             //this->current_state = RUN;
             break;
         }
@@ -144,7 +151,7 @@ void Controller::strategy_run() {
             this->locomotion.stop();
             this->led.off();
 
-            this->turn = RC_INPUT;
+            //this->turn = RC_INPUT;
             //this->current_state = RUN;
             break;
         }
@@ -184,7 +191,7 @@ void Controller::strategy_run() {
             this->locomotion.stop();
             this->led.off();
 
-            this->turn = RC_INPUT;
+            //this->turn = RC_INPUT;
             //this->current_state = RUN;
             break;
         }

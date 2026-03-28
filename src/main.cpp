@@ -6,6 +6,7 @@
 #include "motor.hpp"
 #include "utils.hpp"
 #include "locomotion.hpp"
+#include "controller.hpp"
 
 static volatile int16_t left_speed;
 static volatile int16_t right_speed;
@@ -34,24 +35,13 @@ int main() {
     uint32_t led_timer = HAL_GetTick();
     uint8_t led_blink_count = 0;
 
+    Controller controller(led, locomotion, rc);
+
+    controller.init();
     for (;;) {
-        channel_1 = -rc.get_speed_ch1()*1.33;
-        channel_2 = rc.get_speed_ch2()*1.25;
-
-        left_speed = channel_1 + channel_2;
-        right_speed = channel_1 - channel_2;
-
-        left_speed = constrain(left_speed, -100, 100);
-        right_speed = constrain(right_speed, -100, 100);
-
-        locomotion.set_speed(left_speed, right_speed);
-
-        if (led_blink_count < 26 && HAL_GetTick() - led_timer >= 300) {
-            led.toggle();
-            led_timer = HAL_GetTick();
-            led_blink_count++;
+        controller.run();
+        //locomotion.set_speed(rc.get_speed_ch1(), rc.get_speed_ch2());
         }
-    }
     return 0;
 }
 
